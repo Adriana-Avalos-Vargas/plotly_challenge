@@ -12,7 +12,7 @@ d3.json("samples.json").then((importedData) => {
     // console.log(importedData);
     var data = importedData;
     var names = data.names;
-    console.log(names);
+    //console.log(names);
 
     //Lets populate de selection  test subject Id
     var dropMenu = d3.select("#selDataset");
@@ -34,7 +34,7 @@ function init() {
         var data = importedData;
         //extract the first sample name
         var sampleName = data.names[0];
-        console.log(sampleName);
+        //console.log(sampleName);
 
         //Lets call the function to build the bar graph
         barChart(sampleName);
@@ -61,28 +61,28 @@ function barChart(sample){
         
         //Select data to make the graphs
         var graphData = data.samples;
-        console.log("This is the data to make the barchar");
-        console.log(graphData);
+        //console.log("This is the data to make the barchar");
+        //console.log(graphData);
 
         //Filter data for the selected observation
         var filteredData = graphData.filter(oneSample =>
             oneSample.id === sample);
-        console.log("This is for one subject");
-        console.log(filteredData);
+        //console.log("This is for one subject");
+        //console.log(filteredData);
         //Extract array from filtered Data
         var filteredArray = filteredData[0];
-        console.log(filteredArray);
+        //console.log(filteredArray);
         
         //Create arrays for each data that is goingo to be uses
               
         var sampleValues = filteredArray.sample_values;
         var otuIds = filteredArray.otu_ids;
         var otuLabels = filteredArray.otu_labels;
-        console.log(sampleValues);
-        console.log(otuLabels);
+        //console.log(sampleValues);
+        //console.log(otuLabels);
         
         //Create a new object
-        var observations = []
+        var observations = [];
 
         for (var i = 0; i < sampleValues.length; i++) {
              var samples = sampleValues[i];
@@ -91,11 +91,11 @@ function barChart(sample){
              var temp ={sv:samples, idOtu:ids, labelOtu:labels};
              observations.push(temp);
            };
-         console.log(observations)  
+         //console.log(observations)  
         
         //Lets order (sort) data by sampleValues
         var sortedByvalues = observations.sort((a, b) => b.sv - a.sv);
-        console.log(sortedByvalues)
+        //console.log(sortedByvalues);
         // Slice the first 10 objects for plotting
         slicedData = sortedByvalues.slice(0, 10);
         // Reverse the array to accommodate Plotly's defaults
@@ -142,25 +142,25 @@ function bubbleChart(sample){
         
         //Select data to make the graphs
         var graphData = data.samples;
-        console.log("This is the data to make the bubble graph");
-        console.log(graphData);
+        //console.log("This is the data to make the bubble graph");
+        //console.log(graphData);
 
         //Filter data for the selected observation
         var filteredData = graphData.filter(oneSample =>
             oneSample.id === sample);
-        console.log("This is for one subject");
-        console.log(filteredData);
+        //console.log("This is for one subject");
+        //console.log(filteredData);
         //Extract array from filtered Data
         var filteredArray = filteredData[0];
-        console.log(filteredArray);
+        //console.log(filteredArray);
         
         //Create arrays for each data that is goingo to be uses
               
         var sampleValues = filteredArray.sample_values;
         var otuIds = filteredArray.otu_ids;
         var otuLabels = filteredArray.otu_labels;
-        console.log(sampleValues);
-        console.log(otuIds);
+        //console.log(sampleValues);
+        //console.log(otuIds);
         
         var trace1 = {
             x: otuIds,
@@ -168,9 +168,8 @@ function bubbleChart(sample){
             text: otuLabels,
             mode: 'markers',
             marker: {
-                color: otuIds,
-                colorscale: 'Jet',
-              //color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+              color: otuIds,
+              colorscale: 'Jet',
               size: sampleValues
             }
           };
@@ -178,8 +177,10 @@ function bubbleChart(sample){
           var dataBubble = [trace1];
           
           var layout = {
-            title: 'Bubble Chart Hover Text',
-            showlegend: false,
+            title: 'Bubble Chart microbe in selected ID navel',
+            xaxis: {
+                title: {
+                  text: 'OTU ID'}},
             height: 600,
             width: 1400
           };
@@ -196,7 +197,50 @@ function bubbleChart(sample){
 //////////////////////////////////////////////////////
 //Create a function to do the demographic info presentation
 function infoChart(sample){
-    console.log("Here goes the cide to cretae demo info");
+    console.log("Here goes the code to cretae demo info");
+    var filter = parseInt(sample)
+    //Call data
+    d3.json("samples.json").then((importedData) => {
+        var data = importedData;
+        //Select data to make the graphs
+        var demoData = data.metadata;
+        console.log(demoData);
+        //select one sample
+        //Filter data for the selected observation
+        var filteredData = demoData.filter(oneSample =>
+            oneSample.id === filter);
+        console.log(filteredData);
+        //select the info
+        demographics = filteredData[0]
+        console.log(demographics)
+
+        // convert object to key's array
+        const keys = Object.keys(demographics);
+
+        // print all keys
+        console.log(keys);
+
+        //Lets generate a list of info
+        //Select 
+        var startDiv = d3.select(".panel-body");
+        
+       //create paragraph iterating over object
+       // iterate over object
+       d3.selectAll("p").remove();
+        keys.forEach((key, index) => {
+            value = demographics[key];
+            startDiv.append("p")
+            .text(key + ": "+ value);
+
+                        
+         });
+        
+    
+        
+
+
+    //end of rendering data         
+    });
 };
 
 //lets catch a change or selection
@@ -211,6 +255,15 @@ function optionChanged() {
   // Initialize an empty array for the country's data
   console.log("You choose");
   console.log(dataset);
+
+  //Lets call the function to build the bar graph
+  barChart(dataset);
+
+  //Lets call the function to build the bubble chart
+  bubbleChart(dataset);
+
+  //Lets call the info chart function
+  infoChart(dataset);
 }
 
 init();
