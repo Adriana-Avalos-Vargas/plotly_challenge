@@ -37,15 +37,23 @@ function init() {
         console.log(sampleName);
 
         //Lets call the function to build the bar graph
-        barChar(sampleName)
+        barChart(sampleName);
+
+        //Lets call the function to build the bubble chart
+        bubbleChart(sampleName);
+
+        //Lets call the info chart function
+        infoChart(sampleName);
     
           
     });
   }
 //end of init function
 
+
+///////////////////////////////////////////
 //Generate a funtion that creates a bar graph
-function barChar(sample){
+function barChart(sample){
     console.log("here goes the bar code")
     //Call data
     d3.json("samples.json").then((importedData) => {
@@ -123,6 +131,73 @@ function barChar(sample){
     });
 }
 //end of bar graph function
+
+///////////////////////////////////////////////////////
+//create a function to do the bubble chart
+function bubbleChart(sample){
+    console.log("here goes the bubble code")
+    //Call data
+    d3.json("samples.json").then((importedData) => {
+        var data = importedData;
+        
+        //Select data to make the graphs
+        var graphData = data.samples;
+        console.log("This is the data to make the bubble graph");
+        console.log(graphData);
+
+        //Filter data for the selected observation
+        var filteredData = graphData.filter(oneSample =>
+            oneSample.id === sample);
+        console.log("This is for one subject");
+        console.log(filteredData);
+        //Extract array from filtered Data
+        var filteredArray = filteredData[0];
+        console.log(filteredArray);
+        
+        //Create arrays for each data that is goingo to be uses
+              
+        var sampleValues = filteredArray.sample_values;
+        var otuIds = filteredArray.otu_ids;
+        var otuLabels = filteredArray.otu_labels;
+        console.log(sampleValues);
+        console.log(otuIds);
+        
+        var trace1 = {
+            x: otuIds,
+            y: sampleValues,
+            text: otuLabels,
+            mode: 'markers',
+            marker: {
+                color: otuIds,
+                colorscale: 'Jet',
+              //color: ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'],
+              size: sampleValues
+            }
+          };
+          
+          var dataBubble = [trace1];
+          
+          var layout = {
+            title: 'Bubble Chart Hover Text',
+            showlegend: false,
+            height: 600,
+            width: 1400
+          };
+          
+          Plotly.newPlot('bubble', dataBubble, layout);
+          
+           
+
+    //end of rendering data         
+    });
+};
+//end of function bubbleChart
+
+//////////////////////////////////////////////////////
+//Create a function to do the demographic info presentation
+function infoChart(sample){
+    console.log("Here goes the cide to cretae demo info");
+};
 
 //lets catch a change or selection
 // On change to the DOM, call getData()
