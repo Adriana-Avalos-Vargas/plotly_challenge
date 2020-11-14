@@ -44,6 +44,9 @@ function init() {
 
         //Lets call the info chart function
         infoChart(sampleName);
+
+        //Lets call the gauge chart function
+        gaugeChart(sampleName)
     
           
     });
@@ -204,21 +207,21 @@ function infoChart(sample){
         var data = importedData;
         //Select data to make the graphs
         var demoData = data.metadata;
-        console.log(demoData);
+        //console.log(demoData);
         //select one sample
         //Filter data for the selected observation
         var filteredData = demoData.filter(oneSample =>
             oneSample.id === filter);
-        console.log(filteredData);
+        //console.log(filteredData);
         //select the info
         demographics = filteredData[0]
-        console.log(demographics)
+        //console.log(demographics)
 
         // convert object to key's array
         const keys = Object.keys(demographics);
 
         // print all keys
-        console.log(keys);
+        //console.log(keys);
 
         //Lets generate a list of info
         //Select 
@@ -264,6 +267,9 @@ function optionChanged() {
 
   //Lets call the info chart function
   infoChart(dataset);
+
+  //Lets call the gauge chart function
+  gaugeChart(dataset);
 }
 
 init();
